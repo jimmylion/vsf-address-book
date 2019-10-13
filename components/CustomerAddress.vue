@@ -57,7 +57,7 @@
 <script>
 
 import AddressForm from './AddressForm'
-import ButtonFull from 'theme/components/theme/ButtonFull'
+import ButtonFull from 'theme/components/base/ButtonFull/ButtonFull'
 import Countries from '@vue-storefront/i18n/resource/countries.json'
 import { RemoveAddress } from './RemoveAddress'
 import i18n from '@vue-storefront/i18n'

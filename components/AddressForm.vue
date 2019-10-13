@@ -196,10 +196,10 @@
 </template>
 <script>
 import { required, minLength } from 'vuelidate/lib/validators'
-import ButtonFull from 'theme/components/theme/ButtonFull'
-import BaseCheckbox from 'theme/components/core/blocks/Form/BaseCheckbox'
-import BaseInput from 'theme/components/core/blocks/Form/BaseInput'
-import BaseSelect from 'theme/components/core/blocks/Form/BaseSelect'
+import ButtonFull from 'theme/components/base/ButtonFull/ButtonFull'
+import BaseCheckbox from 'theme/components/base/BaseCheckbox/BaseCheckbox'
+import BaseInput from 'theme/components/base/BaseInput/BaseInput'
+import BaseSelect from 'theme/components/base/BaseSelect/BaseSelect'
 import Countries from '@vue-storefront/i18n/resource/countries.json'
 import { AddAddress } from './AddAddress'
 import toString from 'lodash-es/toString'
