@@ -7,6 +7,7 @@ export default interface Address {
   phone: string;
   postcode: string;
   region: string;
+  region_id?: string | number;
   street: string;
   default_shipping: boolean;
   default_billing: boolean;

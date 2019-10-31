@@ -48,22 +48,6 @@
         <base-input
           class="mb-6"
           type="text"
-          name="apartment-number"
-          autocomplete="address-line2"
-          :placeholder="`${$t('House/Apartment number')} *`"
-          v-model.trim="customer.house"
-          @input="$v.customer.house.$touch()"
-          :validation="{
-            condition: !$v.customer.house.required && $v.customer.house.$error,
-            text: $t('Field is required')
-          }"
-        />
-      </div>
-
-      <div class="col-xs-12 col-md-6">
-        <base-input
-          class="mb-6"
-          type="text"
           name="city"
           autocomplete="address-level2"
           :placeholder="`${$t('City')} *`"
@@ -76,18 +60,7 @@
         />
       </div>
 
-      <div class="col-xs-12 col-md-6">
-        <base-input
-          class="mb-6"
-          type="text"
-          name="state"
-          autocomplete="address-level1"
-          :placeholder="$t('State / Province')"
-          v-model.trim="customer.region"
-        />
-      </div>
-
-      <div class="col-xs-12 col-md-6">
+      <div class="col-xs-12 col-md-6">      
         <base-select
           class="mb-6"
           name="countries"
@@ -103,7 +76,28 @@
           v-model="customer.country"
           autocomplete="country-name"
           @blur="$v.customer.country.$touch()"
-          @change="$v.customer.country.$touch()"
+          @change.native="$v.customer.country.$touch(); customer.region = ''; customer.region_id = null"
+        />
+      </div>
+
+      <div class="col-xs-12 col-md-6">      
+        <base-select
+          v-if="regionOptionsNormalized"
+          name="regions"
+          :options="regionOptionsNormalized"
+          :selected="customer.region_id"
+          :placeholder="$t('Region *')"
+          :validations="[
+            {
+              condition: regionOptionsNormalized && $v.customer.region_id.$error && !$v.customer.region_id.required,
+              text: $t('Field is required')
+            }
+          ]"
+          v-model="customer.region_id"
+          autocomplete="region-name"
+          @blur="$v.customer.region_id.$touch()"
+          @change.native="$v.customer.region_id.$touch()"
+          class="my-shipping-details__input"
         />
       </div>
 
@@ -188,7 +182,6 @@ import ButtonFull from 'theme/components/base/ButtonFull/ButtonFull'
 import BaseCheckbox from 'theme/components/base/BaseCheckbox/BaseCheckbox'
 import BaseInput from 'theme/components/base/BaseInput/BaseInput'
 import BaseSelect from 'theme/components/base/BaseSelect/BaseSelect'
-import Countries from '@vue-storefront/i18n/resource/countries.json'
 import { AddAddress } from './AddAddress'
 import toString from 'lodash-es/toString'
 
@@ -199,6 +192,10 @@ export default {
       type: Number,
       required: false,
       default: null
+    },
+    countries: {
+      type: Array,
+      required: true
     }
   },
   components: {
@@ -211,14 +208,36 @@ export default {
     countryOptions () {
       return this.countries.map((item) => {
         return {
-          value: item.code,
-          label: item.name
+          value: item.id,
+          label: item.full_name_english
         }
       })
     },
+    regionOptions () {
+      if (!this.customer.country || this.customer.country === '') {
+        return
+      }
+      const countryObj = this.countries.find(country => country.id === this.customer.country)
+      if (!countryObj) {
+        return
+      }
+      return countryObj.available_regions
+    },
+    regionOptionsNormalized () {
+      return this.regionOptions ? this.regionOptions.map((item) => {
+        return {
+          value: +item.id,
+          label: item.name
+        }
+      }) : null
+    },
     fullName: {
       get () {
-        return `${this.customer.firstName} ${this.customer.lastName}`
+        if (!this.customer.lastName && !this.customer.firstName.endsWith(' ')) {
+          return this.customer.firstName
+        }
+        const fullName = `${this.customer.firstName} ${this.customer.lastName}`
+        return fullName.trim().length ? fullName : ''
       },
       set (value) {
         const tmp = value.split(' ')
@@ -241,12 +260,19 @@ export default {
         postcode: null,
         default_shipping: false,
         default_billing: false
-      },
-      countries: Countries
+      }
     }
   },
   mounted () {
     this.customer = this.getCustomerAddress()
+  },
+  watch: {
+    'customer.region_id' (regionId) {
+      const regionObject = this.regionOptionsNormalized && this.regionOptionsNormalized.find(region => region.value === +regionId)
+      if (regionObject) {
+        this.customer.region = regionObject.label
+      }
+    }
   },
   mixins: [ AddAddress ],
   methods: {
@@ -297,6 +323,7 @@ export default {
             city: currentUser.addresses[index].city,
             postcode: currentUser.addresses[index].postcode,
             region: currentUser.addresses[index].region.region ? currentUser.addresses[index].region.region : '',
+            region_id: currentUser.addresses[index].region_id ? currentUser.addresses[index].region_id : 0,
             country: currentUser.addresses[index].country_id,
             phone: currentUser.addresses[index].hasOwnProperty('telephone') ? currentUser.addresses[index].telephone : '',
             default_shipping: currentUser.addresses[index].default_shipping ? currentUser.addresses[index].default_shipping : false,
@@ -344,32 +371,38 @@ export default {
       return true
     }
   },
-  validations: {
-    customer: {
-      firstName: {
-        required,
-        minLength: minLength(3)
-      },
-      lastName: {
-        required
-      },
-      country: {
-        required
-      },
-      street: {
-        required
-      },
-      house: {
-        required
-      },
-      postcode: {
-        required,
-        minLength: minLength(3)
-      },
-      city: {
+  validations() {
+    const base = {
+      customer: {
+        firstName: {
+          required,
+          minLength: minLength(3)
+        },
+        lastName: {
+          required
+        },
+        country: {
+          required
+        },
+        street: {
+          required
+        },
+        postcode: {
+          required,
+          minLength: minLength(3)
+        },
+        city: {
+          required
+        }
+      }
+    }
+
+    if (this.regionOptionsNormalized) {
+      base.customer.region_id = {
         required
       }
     }
+    return base
   }
 }
 </script>

@@ -50,6 +50,7 @@
       v-if="toggleAddressForm"
       @reset-toggle="resetToggle"
       :address-id="currentAddressId"
+      :countries="countries"
     />
   </div>
 
@@ -58,7 +59,6 @@
 
 import AddressForm from './AddressForm'
 import ButtonFull from 'theme/components/base/ButtonFull/ButtonFull'
-import Countries from '@vue-storefront/i18n/resource/countries.json'
 import { RemoveAddress } from './RemoveAddress'
 import i18n from '@vue-storefront/i18n'
 
@@ -67,8 +67,13 @@ export default {
   data () {
     return {
       toggleAddressForm: false,
-      countries: Countries,
       currentAddressId: null
+    }
+  },
+  props: {
+    countries: {
+      type: Array,
+      required: true
     }
   },
   computed: {
@@ -87,7 +92,7 @@ export default {
       this.currentAddressId = null
     },
     getCountryName (countryId) {
-      return this.countries.filter(country => country.code === countryId)[0].name
+      return this.countries.filter(country => country.id === countryId)[0].full_name_english
     },
     editAddress (addressId) {
       if (this.toggleAddressForm) {

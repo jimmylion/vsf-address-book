@@ -36,7 +36,7 @@ export const actions: ActionTree<AddressBookState, any> = {
           region: {
             region: addressData.region
           },
-          region_id: 0,
+          region_id: addressData.region_id ? addressData.region_id : 0,
           street: [
             addressData.street,
             addressData.house
@@ -124,6 +124,7 @@ export const actions: ActionTree<AddressBookState, any> = {
         existAddresses[index].region = {
           region: addressData.newAddress.region ? addressData.newAddress.region : null
         }
+        existAddresses[index].region_id = addressData.newAddress.region_id ? addressData.newAddress.region_id : 0
         existAddresses[index].country_id = addressData.newAddress.country
         existAddresses[index].postcode = addressData.newAddress.postcode
         existAddresses[index].telephone = addressData.newAddress.phone ? addressData.newAddress.phone : '',
