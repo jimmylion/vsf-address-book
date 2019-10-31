@@ -8,8 +8,8 @@
           type="text"
           name="first-name"
           autocomplete="given-name"
-          :placeholder="`${$t('First name')} *`"
-          v-model.trim="customer.firstName"
+          :placeholder="`${$t('Full name')} *`"
+          v-model.trim="fullName"
           @input="$v.customer.firstName.$touch()"
           :validations="[
             {
@@ -19,24 +19,12 @@
             {
               condition: !$v.customer.firstName.minLength,
               text: $t('Name must have at least 3 letters.')
+            },
+            {
+              condition: !$v.customer.lastName.required,
+              text: $t('Last name is required')
             }
           ]"
-        />
-      </div>
-
-      <div class="col-xs-12 col-md-6">
-        <base-input
-          class="mb-6"
-          type="text"
-          name="last-name"
-          autocomplete="family-name"
-          :placeholder="`${$t('Last name')} *`"
-          v-model.trim="customer.lastName"
-          @input="$v.customer.lastName.$touch()"
-          :validation="{
-            condition: !$v.customer.lastName.required && $v.customer.lastName.$error,
-            text: $t('Field is required')
-          }"
         />
       </div>
 
@@ -227,6 +215,16 @@ export default {
           label: item.name
         }
       })
+    },
+    fullName: {
+      get () {
+        return `${this.customer.firstName} ${this.customer.lastName}`
+      },
+      set (value) {
+        const tmp = value.split(' ')
+        this.customer.firstName = tmp.shift()
+        this.customer.lastName = tmp.join(' ')
+      }
     }
   },
   data () {
