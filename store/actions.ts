@@ -7,6 +7,7 @@ import { adjustMultistoreApiUrl } from '@vue-storefront/core/lib/multistore'
 import i18n from '@vue-storefront/i18n'
 import toString from 'lodash-es/toString'
 import { Logger } from '@vue-storefront/core/lib/logger'
+import SideRequest from 'core/lib/side-request.ts';
 
 export const actions: ActionTree<AddressBookState, any> = {
   async addAddress ({ rootState }, addressData: Address) {
@@ -61,7 +62,7 @@ export const actions: ActionTree<AddressBookState, any> = {
         Vue.prototype.$bus.$emit('notification-progress-start', i18n.t('Saving...'))
         try {
 
-          let url = rootStore.state.config.addressbook.create_endpoint.replace('{{customerId}}', customerId)
+          let url = SideRequest(rootStore.state.config.addressbook, 'create_endpoint').replace('{{customerId}}', customerId)
           if (rootStore.state.config.storeViews.multistore) {
             url = adjustMultistoreApiUrl(url)
           }
@@ -147,7 +148,7 @@ export const actions: ActionTree<AddressBookState, any> = {
       Vue.prototype.$bus.$emit('notification-progress-start', i18n.t('Saving...'))
       try {
 
-        let url = rootStore.state.config.addressbook.create_endpoint.replace('{{customerId}}', customerId)
+        let url = SideRequest(rootStore.state.config.addressbook, 'create_endpoint').replace('{{customerId}}', customerId)
         if (rootStore.state.config.storeViews.multistore) {
           url = adjustMultistoreApiUrl(url)
         }
@@ -188,7 +189,7 @@ export const actions: ActionTree<AddressBookState, any> = {
       Vue.prototype.$bus.$emit('notification-progress-start', i18n.t('Removing...'))
       try {
 
-        let url = rootStore.state.config.addressbook.remove_endpoint.replace('{{addressId}}', addressId)
+        let url = SideRequest(rootStore.state.config.addressbook, 'remove_endpoint').replace('{{addressId}}', addressId)
         if (rootStore.state.config.storeViews.multistore) {
           url = adjustMultistoreApiUrl(url)
         }
