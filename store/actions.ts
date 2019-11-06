@@ -7,7 +7,7 @@ import { adjustMultistoreApiUrl } from '@vue-storefront/core/lib/multistore'
 import i18n from '@vue-storefront/i18n'
 import toString from 'lodash-es/toString'
 import { Logger } from '@vue-storefront/core/lib/logger'
-import SideRequest from 'core/lib/side-request.ts';
+import SideRequest from '@vue-storefront/core/lib/side-request';
 
 export const actions: ActionTree<AddressBookState, any> = {
   async addAddress ({ rootState }, addressData: Address) {
