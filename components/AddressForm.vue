@@ -96,7 +96,7 @@
           v-model="customer.region_id"
           autocomplete="region-name"
           @blur="$v.customer.region_id.$touch()"
-          @change.native="$v.customer.region_id.$touch()"
+          @change.native="$v.customer.region_id.$touch();"
           class="my-shipping-details__input"
         />
       </div>
@@ -233,7 +233,7 @@ export default {
     },
     fullName: {
       get () {
-        if (!this.customer.lastName && !this.customer.firstName.endsWith(' ')) {
+        if (!this.customer.lastName && (!this.customer.firstName || !this.customer.firstName.endsWith(' '))) {
           return this.customer.firstName
         }
         const fullName = `${this.customer.firstName} ${this.customer.lastName}`
@@ -256,6 +256,7 @@ export default {
         house: null,
         city: null,
         region: null,
+        region_id: null,
         country: null,
         postcode: null,
         default_shipping: false,
@@ -265,6 +266,7 @@ export default {
   },
   mounted () {
     this.customer = this.getCustomerAddress()
+    this.$set(this.customer, 'region_id', null)
   },
   watch: {
     'customer.region_id' (regionId) {
@@ -287,6 +289,7 @@ export default {
         city: '',
         postcode: '',
         region: '',
+        region_id: null,
         country: '',
         phone: '',
         default_shipping: false,
@@ -339,6 +342,7 @@ export default {
           city: '',
           postcode: '',
           region: '',
+          region_id: null,
           country: '',
           phone: '',
           default_shipping: false,
