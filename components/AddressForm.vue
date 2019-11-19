@@ -266,7 +266,7 @@ export default {
   },
   mounted () {
     this.customer = this.getCustomerAddress()
-    this.$set(this.customer, 'region_id', null)
+    // this.$set(this.customer, 'region_id', null)
   },
   watch: {
     'customer.region_id' (regionId) {
@@ -318,6 +318,15 @@ export default {
           }
         }
         if (index >= 0) {
+          const regionName = typeof currentUser.addresses[index].region === 'string' ? currentUser.addresses[index].region : currentUser.addresses[index].region.region
+          let regionId
+          if (this.regionOptionsNormalized && regionName) {
+            const region = this.regionOptionsNormalized.find(region => region.label === regionName)
+            if (region) {
+              regionId = region.value
+            }
+          }
+
           return {
             firstName: currentUser.addresses[index].firstname,
             lastName: currentUser.addresses[index].lastname,
@@ -326,7 +335,7 @@ export default {
             city: currentUser.addresses[index].city,
             postcode: currentUser.addresses[index].postcode,
             region: currentUser.addresses[index].region.region ? currentUser.addresses[index].region.region : '',
-            region_id: currentUser.addresses[index].region_id ? currentUser.addresses[index].region_id : 0,
+            region_id: regionId ? regionId : (currentUser.addresses[index].region_id ? currentUser.addresses[index].region_id : 0),
             country: currentUser.addresses[index].country_id,
             phone: currentUser.addresses[index].hasOwnProperty('telephone') ? currentUser.addresses[index].telephone : '',
             default_shipping: currentUser.addresses[index].default_shipping ? currentUser.addresses[index].default_shipping : false,
