@@ -44,21 +44,21 @@
         />
       </div>
 
-      <div class="col-xs-12 col-md-6">
-        <base-input
-          class="mb-6"
-          type="text"
-          name="apartment-number"
-          autocomplete="address-line2"
-          :placeholder="`${$t('House/Apartment number')} *`"
-          v-model.trim="customer.house"
-          @input="$v.customer.house.$touch()"
-          :validations="[{
-            condition: !$v.customer.house.required && $v.customer.house.$error,
-            text: $t('Field is required')
-          }]"
-        />
-      </div>
+<!--      <div class="col-xs-12 col-md-6">-->
+<!--        <base-input-->
+<!--          class="mb-6"-->
+<!--          type="text"-->
+<!--          name="apartment-number"-->
+<!--          autocomplete="address-line2"-->
+<!--          :placeholder="`${$t('House/Apartment number')} *`"-->
+<!--          v-model.trim="customer.house"-->
+<!--          @input="$v.customer.house.$touch()"-->
+<!--          :validations="[{-->
+<!--            condition: !$v.customer.house.required && $v.customer.house.$error,-->
+<!--            text: $t('Field is required')-->
+<!--          }]"-->
+<!--        />-->
+<!--      </div>-->
 
       <div class="col-xs-12 col-md-6">
         <base-input
@@ -347,7 +347,7 @@ export default {
             firstName: currentUser.addresses[index].firstname,
             lastName: currentUser.addresses[index].lastname,
             street: currentUser.addresses[index].street[0],
-            house: currentUser.addresses[index].street[1] ? currentUser.addresses[index].street[1] : currentUser.addresses[index].street[0],
+            house: '1',
             city: currentUser.addresses[index].city,
             postcode: currentUser.addresses[index].postcode,
             region: currentUser.addresses[index].region.region ? currentUser.addresses[index].region.region : '',
@@ -416,9 +416,9 @@ export default {
         street: {
           required
         },
-        house: {
-          required
-        },
+        // house: {
+        //   required
+        // },
         postcode: {
           required,
           minLength: minLength(3)
