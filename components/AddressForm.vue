@@ -7,7 +7,7 @@
           class="mb-6"
           type="text"
           name="first-name"
-          autocomplete="given-name"
+          autocomplete="name"
           :placeholder="`${$t('Full name')} *`"
           v-model.trim="fullName"
           @input="$v.customer.firstName.$touch()"
@@ -48,6 +48,22 @@
         <base-input
           class="mb-6"
           type="text"
+          name="apartment-number"
+          autocomplete="address-line2"
+          :placeholder="`${$t('House/Apartment number')} *`"
+          v-model.trim="customer.house"
+          @input="$v.customer.house.$touch()"
+          :validations="[{
+            condition: !$v.customer.house.required && $v.customer.house.$error,
+            text: $t('Field is required')
+          }]"
+        />
+      </div>
+
+      <div class="col-xs-12 col-md-6">
+        <base-input
+          class="mb-6"
+          type="text"
           name="city"
           autocomplete="address-level2"
           :placeholder="`${$t('City')} *`"
@@ -60,7 +76,7 @@
         />
       </div>
 
-      <div class="col-xs-12 col-md-6">      
+      <div class="col-xs-12 col-md-6">
         <base-select
           class="mb-6"
           name="countries"
@@ -80,7 +96,7 @@
         />
       </div>
 
-      <div class="col-xs-12 col-md-6">      
+      <div class="col-xs-12 col-md-6">
         <base-select
           v-if="regionOptionsNormalized"
           name="regions"
@@ -331,7 +347,7 @@ export default {
             firstName: currentUser.addresses[index].firstname,
             lastName: currentUser.addresses[index].lastname,
             street: currentUser.addresses[index].street[0],
-            house: currentUser.addresses[index].street[1],
+            house: currentUser.addresses[index].street[1] ? currentUser.addresses[index].street[1] : currentUser.addresses[index].street[0],
             city: currentUser.addresses[index].city,
             postcode: currentUser.addresses[index].postcode,
             region: currentUser.addresses[index].region.region ? currentUser.addresses[index].region.region : '',
@@ -398,6 +414,9 @@ export default {
           required
         },
         street: {
+          required
+        },
+        house: {
           required
         },
         postcode: {
