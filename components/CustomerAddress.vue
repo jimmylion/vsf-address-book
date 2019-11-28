@@ -15,7 +15,7 @@
             </p>
             <p>
               {{ address.street[0] }}
-              <span v-if="address.street[1]"> {{ address.street[1] }}</span>
+<!--              <span v-if="address.street[1]"> {{ address.street[1] }}</span>-->
             </p>
             <p>
               {{ address.city }} {{ address.postcode }}
