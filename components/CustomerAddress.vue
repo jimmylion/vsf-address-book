@@ -21,7 +21,7 @@
               {{ address.city }} {{ address.postcode }}
             </p>
             <p>
-              <span v-if="address.region">{{ address.region.region }}, </span>
+              <span v-if="address.region && !!address.region.region">{{ address.region.region }}, </span>
               {{ getCountryName(address.country_id) }}
             </p>
             <div v-if="address.telephone">

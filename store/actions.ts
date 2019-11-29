@@ -117,6 +117,7 @@ export const actions: ActionTree<AddressBookState, any> = {
         }
       }
 
+
       if (index >= 0) {
         existAddresses[index].firstname = addressData.newAddress.firstName
         existAddresses[index].lastname = addressData.newAddress.lastName
@@ -165,7 +166,7 @@ export const actions: ActionTree<AddressBookState, any> = {
         .then(data => {
           Vue.prototype.$bus.$emit('notification-progress-stop')
           if (data.code === 200) {
-            rootStore.dispatch('user/me')
+            rootStore.dispatch('user/me', { useCache: false })
             rootStore.dispatch('notification/spawnNotification', {
               type: 'success',
               message: i18n.t('Address has been saved successfully.'),
