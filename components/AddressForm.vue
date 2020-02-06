@@ -102,7 +102,7 @@
           name="regions"
           :options="regionOptionsNormalized"
           :selected="customer.region_id"
-          :placeholder="$t('Region *')"
+          :placeholder="$t('Region') + ' *'"
           :validations="[
             {
               condition: regionOptionsNormalized && $v.customer.region_id.$error && !$v.customer.region_id.required,
@@ -114,6 +114,26 @@
           @blur="$v.customer.region_id.$touch()"
           @change.native="$v.customer.region_id.$touch();"
           class="my-shipping-details__input"
+        />
+        <base-input
+          v-else
+          class="mb-6"
+          type="text"
+          name="state"
+          autocomplete="state"
+          :placeholder="$t('State')"
+          v-model.trim="customer.postcode"
+          @input="$v.customer.postcode.$touch()"
+          :validations="[
+            {
+              condition: !$v.customer.postcode.required && $v.customer.postcode.$error,
+              text: $t('Field is required')
+            },
+            {
+              condition: !$v.customer.postcode.minLength,
+              text: $t('Zip-code must have at least 3 letters.')
+            }
+          ]"
         />
       </div>
 
