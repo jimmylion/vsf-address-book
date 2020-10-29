@@ -92,7 +92,7 @@ export default {
       this.currentAddressId = null
     },
     getCountryName (countryId) {
-      return this.countries.filter(country => country.id === countryId)[0].full_name_english
+      return this.countries.filter(country => country.id === countryId)[0].full_name_locale
     },
     editAddress (addressId) {
       if (this.toggleAddressForm) {

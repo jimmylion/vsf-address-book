@@ -245,7 +245,7 @@ export default {
       return this.countries.map((item) => {
         return {
           value: item.id,
-          label: item.full_name_english
+          label: item.full_name_locale
         }
       })
     },
